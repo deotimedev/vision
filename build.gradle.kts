@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "1.8.0"
+    `maven-publish`
 }
 
 group = "com.deotime"
@@ -11,13 +12,14 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.8.20-Beta")
-    testImplementation(kotlin("test"))
 }
 
-tasks.test {
-    useJUnitPlatform()
-}
-
-kotlin {
-    jvmToolchain(8)
+publishing {
+    repositories { mavenLocal() }
+    publications {
+        create<MavenPublication>("vision") {
+            artifactId = "vision"
+            from(components["java"])
+        }
+    }
 }
