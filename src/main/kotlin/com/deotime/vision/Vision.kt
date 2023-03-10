@@ -58,10 +58,10 @@ fun <T> vision(vararg props: KMutableProperty0<out T>): Vision<T> =
     Vision(props.map { Vision.View.Simple(it) })
 
 inline fun <reified T> visions(prop: KProperty0<MutableList<T>>): Vision<T> =
-    vision(typeOf<T>(), prop)
+    visions(typeOf<T>(), prop)
 
 inline fun <reified T> visions(vararg props: KProperty0<MutableList<T>>): Vision<T> =
-    vision(typeOf<T>(), *props)
+    visions(typeOf<T>(), *props)
 
 fun <T> visions(type: KType, prop: KProperty0<MutableList<T>>): Vision<T> =
     Vision {
@@ -78,9 +78,9 @@ fun <T> visions(type: KType, prop: KProperty0<MutableList<T>>): Vision<T> =
 fun <T> visions(type: KType, vararg props: KProperty0<MutableList<T>>): Vision<T> =
     when (props.size) {
         0 -> Vision.empty()
-        1 -> vision(type, props.first())
+        1 -> visions(type, props.first())
         else -> {
-            props.map { prop -> vision(type, prop) }.fold(Vision.empty()) { a, b -> a + b }
+            props.map { prop -> visions(type, prop) }.fold(Vision.empty()) { a, b -> a + b }
         }
     }
 
