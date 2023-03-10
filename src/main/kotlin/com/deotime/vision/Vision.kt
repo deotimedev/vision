@@ -10,7 +10,7 @@ import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
 
 class Vision<out T>(
-    private val compute: () -> List<View<T>>
+    private val compute: () -> Iterable<View<T>>
 ) : Sequence<Vision.View<T>> by (Sequence { compute().iterator() }) {
     constructor(views: List<View<T>>) : this({ views })
 
@@ -82,4 +82,9 @@ fun <T> vision(type: KType, vararg props: KProperty0<MutableList<T>>): Vision<T>
         else -> {
             props.map { prop -> vision(type, prop) }.fold(Vision.empty()) { a, b -> a + b }
         }
+    }
+
+fun <T> blurred(vararg props: KMutableProperty0<T?>): Vision<T> =
+    Vision {
+        props.filter { it() != null }.map { Vision.View.Simple(it as KMutableProperty0<T>) }
     }
