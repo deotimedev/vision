@@ -44,11 +44,12 @@ class Vision<out T>(
         }
     }
 
+    /**
+     * Note that this requires LHS type to be greater or equal to the RHS type
+     */
     operator fun plus(other: Vision<@UnsafeVariance T>) = Vision { compute() + other.compute() }
 
     companion object {
-
-
         private val Empty = Vision<Nothing>(emptyList())
         fun <T> empty(): Vision<T> = Empty
     }
