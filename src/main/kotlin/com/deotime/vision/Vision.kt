@@ -2,7 +2,6 @@
 
 package com.deotime.vision
 
-import com.deotime.vision.Vision.Companion.plus
 import kotlin.reflect.KMutableProperty0
 import kotlin.reflect.KProperty0
 import kotlin.reflect.KType
@@ -45,9 +44,10 @@ class Vision<out T>(
         }
     }
 
+    operator fun plus(other: Vision<@UnsafeVariance T>) = Vision { compute() + other.compute() }
+
     companion object {
-        operator fun <T> Vision<T>.plus(other: Vision<T>) =
-            Vision { compute() + other.compute() }
+
 
         private val Empty = Vision<Nothing>(emptyList())
         fun <T> empty(): Vision<T> = Empty

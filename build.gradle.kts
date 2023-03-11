@@ -4,13 +4,14 @@ plugins {
 }
 
 group = "com.deotime"
-version = "1.0.2"
+version = "1.0.3"
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    testImplementation(kotlin("test"))
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.8.20-Beta")
 }
 
