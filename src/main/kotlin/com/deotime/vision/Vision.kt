@@ -10,8 +10,10 @@ import kotlin.reflect.typeOf
 
 class Vision<out T>(
     private val compute: () -> Iterable<View<T>>
-) : Sequence<Vision.View<T>> by (Sequence { compute().iterator() }) {
+) {
     constructor(views: List<View<T>>) : this({ views })
+
+    operator fun iterator() = compute().iterator()
 
     interface View<out T> {
         fun get(): T
