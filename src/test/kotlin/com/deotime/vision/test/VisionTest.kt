@@ -2,6 +2,8 @@ package com.deotime.vision.test
 
 import com.deotime.vision.Eyes
 import com.deotime.vision.Vision
+import com.deotime.vision.Vision.Companion.plus
+import com.deotime.vision.eyesight
 import com.deotime.vision.vision
 import com.deotime.vision.visions
 import kotlin.test.Test
@@ -15,24 +17,30 @@ class VisionTest {
         }
         object Other : Tester
         object Last : Tester
+        object Special : Tester
     }
     data class TestData(
         var test1: Tester.Thing = Tester.Thing.One,
         var test2: Tester = Tester.Other,
-        val testList: MutableList<Tester> = mutableListOf()
+        val testList: MutableList<Tester.Thing> = mutableListOf(),
+        var innerTest: Inner = Inner()
     ) : Eyes<Tester> {
-        override val sight = vision(::test1, ::test2) + visions(::testList)
+        override val sight = visions(::testList) + vision(::test1, ::test2) + eyesight(::innerTest)
+
+        data class Inner(
+            var innerTest: Tester = Tester.Special,
+            var innerTest2: Tester = Tester.Special
+        ) : Eyes<Tester> {
+            override val sight = vision(::innerTest, ::innerTest2)
+        }
     }
 
     @Test
     fun test() {
         val test = TestData()
         val sight = test.sight
-        sight.forEach {
-            println("hi 1")
-        }
-        sight.forEach {
-            println("hi 2")
+        sight.views().forEach {
+            println(it.get())
         }
     }
 
