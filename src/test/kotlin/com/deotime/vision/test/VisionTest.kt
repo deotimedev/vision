@@ -3,6 +3,7 @@ package com.deotime.vision.test
 import com.deotime.vision.Eyes
 import com.deotime.vision.Vision
 import com.deotime.vision.Vision.Companion.plus
+import com.deotime.vision.Vision.View.Companion.unlock
 import com.deotime.vision.eyesight
 import com.deotime.vision.vision
 import com.deotime.vision.visions
@@ -41,6 +42,9 @@ class VisionTest {
         val sight = test.sight
         sight.views().forEach {
             println(it.get())
+            it.unlock<Tester.Thing> {
+                it.set(Tester.Thing.Two)
+            }
         }
     }
 
