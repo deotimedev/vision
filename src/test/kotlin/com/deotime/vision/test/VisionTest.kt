@@ -6,7 +6,6 @@ import com.deotime.vision.Vision.Companion.plus
 import com.deotime.vision.Vision.View.Companion.unlock
 import com.deotime.vision.eyesight
 import com.deotime.vision.vision
-import com.deotime.vision.visions
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
@@ -26,7 +25,7 @@ class VisionTest {
         val testList: MutableList<Tester.Thing> = mutableListOf(),
         var innerTest: Inner = Inner()
     ) : Eyes<Tester> {
-        override val sight = visions(::testList) + vision(::test1, ::test2) + eyesight(::innerTest)
+        override val sight = vision(::testList) + vision(::test1, ::test2) + eyesight(::innerTest)
 
         data class Inner(
             var innerTest: Tester = Tester.Special,

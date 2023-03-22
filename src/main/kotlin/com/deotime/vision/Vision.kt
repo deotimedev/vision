@@ -76,13 +76,13 @@ class Vision<out T>(
 fun <T> vision(vararg props: KMutableProperty0<out T>): Vision<T> =
     Vision(props.map { Vision.View.Simple(it) })
 
-inline fun <reified T> visions(prop: KProperty0<MutableList<T>>): Vision<T> =
-    visions(typeOf<T>(), prop)
+inline fun <reified T> vision(prop: KProperty0<MutableList<T>>): Vision<T> =
+    vision(typeOf<T>(), prop)
 
-inline fun <reified T> visions(vararg props: KProperty0<MutableList<T>>): Vision<T> =
-    visions(typeOf<T>(), *props)
+inline fun <reified T> vision(vararg props: KProperty0<MutableList<T>>): Vision<T> =
+    vision(typeOf<T>(), *props)
 
-fun <T> visions(type: KType, prop: KProperty0<MutableList<T>>): Vision<T> =
+fun <T> vision(type: KType, prop: KProperty0<MutableList<T>>): Vision<T> =
     Vision {
         val list = prop()
         List(list.size) { i ->
@@ -94,12 +94,12 @@ fun <T> visions(type: KType, prop: KProperty0<MutableList<T>>): Vision<T> =
         }
     }
 
-fun <T> visions(type: KType, vararg props: KProperty0<MutableList<T>>): Vision<T> =
+fun <T> vision(type: KType, vararg props: KProperty0<MutableList<T>>): Vision<T> =
     when (props.size) {
         0 -> Vision.empty()
-        1 -> visions(type, props.first())
+        1 -> vision(type, props.first())
         else -> {
-            props.map { prop -> visions(type, prop) }.fold(Vision.empty()) { a, b -> a + b }
+            props.map { prop -> vision(type, prop) }.fold(Vision.empty()) { a, b -> a + b }
         }
     }
 
@@ -110,4 +110,9 @@ fun <T> blurred(vararg props: KMutableProperty0<T?>): Vision<T> =
 
 fun <T> eyesight(vararg eyes: KProperty0<Eyes<T>>): Vision<T> = Vision {
     eyes.flatMap { it().sight.views() }
+}
+
+@JvmName("eyesight_iterable")
+fun <T> eyesight(vararg eyes: KProperty0<Iterable<Eyes<T>>>): Vision<T> = Vision {
+    eyes.flatMap { it() }.flatMap { it.sight.views() }
 }
