@@ -1,5 +1,5 @@
 # vision
-Small alternative to visitor pattern, with less boilerplate
+Simple visitor pattern alternative
 
 ### Vision Example:
 ```kotlin
