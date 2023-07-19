@@ -3,8 +3,6 @@
 package com.deotime.vision
 
 import com.deotime.vision.Vision.Companion.plus
-import com.deotime.vision.Vision.View.Companion.unlock
-import com.deotime.vision.Vision.View.Companion.unlockable
 import kotlin.reflect.KMutableProperty0
 import kotlin.reflect.KProperty0
 import kotlin.reflect.KType
@@ -56,14 +54,17 @@ class Vision<out T>(
     companion object {
 
         /**
-         * @throws [StackOverflowError] if there is a cyclic reference
+         * Potentially infinite sequence if views are cyclical
          */
         inline fun <reified T> Vision<T>.deepViews() = _deepViews(typeOf<T>())
 
+        @Suppress("FunctionName")
         @PublishedApi
-        internal fun <T> Vision<T>._deepViews(type: KType): List<View<T>> = views().let { views ->
-            views + views.mapNotNull { (it.get() as? Eyes<*>)?.sight }
-                .flatMap { it._deepViews(type).filter { it.unlockable(type) } as List<View<T>> }
+        internal fun <T> Vision<T>._deepViews(type: KType): Sequence<View<T>> = sequence {
+            val views = views().asSequence()
+            val all = views + views.mapNotNull { (it.get() as? Eyes<*>)?.sight }
+                .flatMap { it._deepViews(type).filter { v -> v.unlockable(type) } as List<View<T>> }
+            yieldAll(all)
         }
 
         operator fun <T> Vision<T>.plus(other: Vision<T>) = Vision { compute() + other.compute() }
@@ -72,6 +73,8 @@ class Vision<out T>(
         fun <T> empty(): Vision<T> = Empty
     }
 }
+
+fun <T> vision(): Vision<T> = Vision.empty()
 
 fun <T> vision(vararg props: KMutableProperty0<out T>): Vision<T> =
     Vision(props.map { Vision.View.Simple(it) })
